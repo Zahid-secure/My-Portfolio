@@ -1,16 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import { PORTFOLIO_DATA, RoleLens } from '../data/portfolioData';
+import myPhoto from '../assets/images/passport_photo_zahid_white_1791746157092.jpg';
 import {
   FileText,
   Mail,
-  Phone,
   ExternalLink,
   MapPin,
   MessageCircle,
   CheckCircle2,
-  Terminal,
-  Upload,
-  RotateCcw
+  Terminal
 } from 'lucide-react';
 
 interface HeroProps {
@@ -26,41 +24,6 @@ export const Hero: React.FC<HeroProps> = ({
   onOpenResumeModal,
   onOpenTerminalModal
 }) => {
-  const [customPhoto, setCustomPhoto] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    const saved = localStorage.getItem('zahid_custom_passport_photo');
-    if (saved) {
-      setCustomPhoto(saved);
-    }
-  }, []);
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const result = event.target?.result as string;
-        if (result) {
-          setCustomPhoto(result);
-          try {
-            localStorage.setItem('zahid_custom_passport_photo', result);
-          } catch {
-            // storage quota fallback
-          }
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const resetPhoto = () => {
-    setCustomPhoto(null);
-    localStorage.removeItem('zahid_custom_passport_photo');
-    if (fileInputRef.current) fileInputRef.current.value = '';
-  };
-
   const summaryText = PORTFOLIO_DATA.summaries[currentLens];
 
   const roleTitle =
@@ -71,8 +34,6 @@ export const Hero: React.FC<HeroProps> = ({
       : 'Cyber Security & Senior IT Systems Engineer';
 
   const subline = '3+ Years Core ISP Network & Enterprise Infrastructure with EDR & Incident Response';
-
-  const displayedPhoto = customPhoto || PORTFOLIO_DATA.personal.avatarImage;
 
   return (
     <section id="overview" className="pt-8 pb-14 px-6 lg:px-12">
@@ -197,48 +158,18 @@ export const Hero: React.FC<HeroProps> = ({
           {/* Right Column: Clean Passport Photo Container */}
           <div className="lg:col-span-5 flex flex-col items-center">
             <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
-              {/* Photo Frame Header with optional upload/replace button */}
+              {/* Photo Frame Header */}
               <div className="p-3 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
                 <span className="text-xs font-semibold text-slate-300">
                   Passport Photograph
                 </span>
-
-                <div className="flex items-center gap-2">
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileUpload}
-                    className="hidden"
-                    id="zahid-photo-input"
-                  />
-                  <label
-                    htmlFor="zahid-photo-input"
-                    className="cursor-pointer px-2 py-1 text-[11px] font-medium text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded transition-colors inline-flex items-center gap-1"
-                    title="Upload or replace photo directly from your device"
-                  >
-                    <Upload className="w-3 h-3 text-cyan-400" />
-                    <span>Upload Original File</span>
-                  </label>
-
-                  {customPhoto && (
-                    <button
-                      onClick={resetPhoto}
-                      className="p-1 text-slate-400 hover:text-white rounded hover:bg-slate-800 transition-colors"
-                      title="Reset to default photo"
-                    >
-                      <RotateCcw className="w-3 h-3" />
-                    </button>
-                  )}
-                </div>
               </div>
 
               {/* Photo Display */}
               <div className="relative aspect-[3/4] w-full bg-white overflow-hidden">
                 <img
-                  src={displayedPhoto}
+                  src={myPhoto}
                   alt="Md Zahid Hasan - Official Passport Photo"
-                  referrerPolicy="no-referrer"
                   className="w-full h-full object-cover object-top"
                 />
               </div>
